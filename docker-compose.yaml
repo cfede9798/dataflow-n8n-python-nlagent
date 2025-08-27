@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+
+  # Jupyter Service Principal Develop Environment
+  jupyter:
+    image: jupyter/scipy-notebook:latest
+    container_name: jupyter_challenge_shadowlightstudio
+    ports:
+      - "8888:8888"
+    environment:  
+      - JUPYTER_TOKEN=1234
+      - JUPYTER_ENABLE_LAB=yes
+    volumes:
+      - ./notebooks:/home/jovyan/challenge/notebooks
+      - ./data:/home/jovyan/challenge/data  
+      - ./database:/home/jovyan/challenge/database
+      - ./n8n:/home/jovyan/challenge/n8n
+    working_dir: /home/jovyan/challenge
+    restart: unless-stopped
+    command: start-notebook.sh --NotebookApp.token='1234' --NotebookApp.password='' --ip='0.0.0.0'
+
+  # n8n Service Orquestation
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n_challenge_shadowlightstudio
+    ports:
+      - "5678:5678"
+    environment:  
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=challenge
+      - N8N_BASIC_AUTH_PASSWORD=shadowlightstudio
+      - GENERIC_TIMEZONE=America/El_Salvador
+      - N8N_LOG_LEVEL=info
+    volumes:
+      - ./n8n:/home/node/.n8n           # n8n Configuration
+      - ./data:/data                    # Input Data (CSV)
+      - ./database:/database            # DuckDB
+      - ./scripts:/notebooks            # Python scripts in Jupyter
+    restart: unless-stopped
+    depends_on:
+      - jupyter
+
+  # Network configuration
+networks:
+  default:
+    name: network_challenge_shadowlightstudio
