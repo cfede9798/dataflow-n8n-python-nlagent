@@ -14,9 +14,9 @@ special_required_packages = {
 for module_name, pip_name in special_required_packages.items():
     try:
         importlib.import_module(module_name)
-        print(f"{module_name} already installed")
+        #print(f"{module_name} already installed")
     except ImportError:
-        print(f"Installing {pip_name}...")
+        #print(f"Installing {pip_name}...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", pip_name])
 
 #import sys
@@ -41,7 +41,7 @@ def main():
         
         # Connect to DuckDB
         conn = duckdb.connect(db_path)
-        print("Connected to warehouse database")
+        #print("Connected to warehouse database")
         
         # Check if we have enough data for 60 days analysis
         days_available = conn.execute("""
@@ -49,7 +49,7 @@ def main():
             FROM ads_spend_db
         """).fetchone()[0]
         
-        print(f"Unique days in dataset: {days_available}")
+        #print(f"Unique days in dataset: {days_available}")
         
         if days_available < 30:
             print("Warning: Less than 30 days of data available")
@@ -127,7 +127,7 @@ def main():
         
         # Get kpi table
         kpi_results = conn.execute(kpi_query).fetchdf()
-        print(kpi_results.to_string(index=False))
+        #print(kpi_results.to_string(index=False))
 
         # Get some database info
         data_overview = conn.execute("""
