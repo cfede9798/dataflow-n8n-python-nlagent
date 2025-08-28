@@ -29,9 +29,10 @@ import os
 def main():
     try:
 
+        # Localprobe
         #csv_path = "/home/jovyan/challenge/data/ads_spend.csv"
         #db_path = "/home/jovyan/challenge/database/warehouse.db"
-
+        # Production
         csv_path = "/data/ads_spend.csv"
         db_path = "/database/warehouse.db"
 
