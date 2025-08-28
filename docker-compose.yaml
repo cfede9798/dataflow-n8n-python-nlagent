@@ -21,7 +21,11 @@ services:
 
   # n8n Service Orquestation
   n8n:
-    image: n8nio/n8n
+    #build:
+    #  context: .
+    #  dockerfile: n8n_python.n8n
+    #image: n8nio/n8n
+    image: naskio/n8n-python
     container_name: n8n_challenge_shadowlightstudio
     ports:
       - "5678:5678"
@@ -35,7 +39,7 @@ services:
       - ./n8n:/home/node/.n8n           # n8n Configuration
       - ./data:/data                    # Input Data (CSV)
       - ./database:/database            # DuckDB
-      - ./scripts:/notebooks            # Python scripts in Jupyter
+      - ./notebooks:/notebooks            # Python scripts in Jupyter
     restart: unless-stopped
     depends_on:
       - jupyter

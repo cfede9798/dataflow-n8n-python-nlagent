@@ -1,17 +1,39 @@
 #!/usr/bin/env python3
 
+import importlib
+import subprocess
+import sys
+
+# We list special packages that don't exist in jupyter installation
+special_required_packages = {
+    "duckdb": "duckdb",
+    "pandas": "pandas"
+}
+
+# Verify special packages
+for module_name, pip_name in special_required_packages.items():
+    try:
+        importlib.import_module(module_name)
+        print(f"{module_name} already installed")
+    except ImportError:
+        print(f"Installing {pip_name}...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", pip_name])
+
+#import sys
 import pandas as pd
 import duckdb
 from datetime import datetime
 import json
-import sys
 import os
 
 def main():
     try:
 
-        csv_path = "/home/jovyan/challenge/data/ads_spend.csv"
-        db_path = "/home/jovyan/challenge/database/warehouse.db"
+        #csv_path = "/home/jovyan/challenge/data/ads_spend.csv"
+        #db_path = "/home/jovyan/challenge/database/warehouse.db"
+
+        csv_path = "/data/ads_spend.csv"
+        db_path = "/database/warehouse.db"
 
         # Verify csv file again
         if not os.path.exists(csv_path):
