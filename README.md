@@ -11,7 +11,7 @@ Dev test for AI + Data Engineer role - Carlos Federico Peña Peña
 
 1. Clone the repository to your designated local project folder
 2. Run Docker Compose - Execute the following command inside your project folder:
-    > bashdocker-compose up -d
+    > docker-compose up -d
     - This will mount the images for:
 
     - naskio/n8n-python
