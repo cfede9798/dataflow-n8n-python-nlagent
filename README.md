@@ -25,7 +25,7 @@ With the n8n service running, load the workflows that are inside the project's w
 The project is developed in Python, using Jupyter Notebooks for execution. It's recommended to follow the steps in the main.ipynb notebook to understand how it works and implement the database.
 ## Data Ingestion
 For data ingestion, executed in n8n and jupyter, you should see the following:
-!(./images/Part 1.png)
+![](./images/Part 1.png)
 ## Metrics Query
 For metrics queries, executed in n8n and jupyter, you should see the following:
 !(./images/Part 2.png)
