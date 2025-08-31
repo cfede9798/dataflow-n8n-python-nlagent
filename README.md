@@ -22,7 +22,7 @@ Dev test for AI + Data Engineer role - Carlos Federico Peña Peña
 ## Workflow Setup
 With the n8n service running, load the workflows that are inside the project's workflows folder (they are in JSON format).
 ## Project Development
-The project is developed in Python, using Jupyter Notebooks for execution. It's recommended to follow the steps in the main.ipynb notebook to understand how it works and implement the database.
+The project is developed in Python, using Jupyter Notebooks for execution. It's recommended to follow the steps in the main.ipynb notebook to understand how it works and implement the database. IMPORTANT: you need to run twice the workflow at first time to load directories and be readys to automate the project
 ## Data Ingestion
 For data ingestion, executed in n8n and jupyter, you should see the following:
 ![](./images/Part%201.png)
