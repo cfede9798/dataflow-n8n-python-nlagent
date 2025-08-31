@@ -1,0 +1,89 @@
+{
+  "name": "Metrics Sub Workflow - Part 3",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75023a0e-7156-4de0-91d8-c85fff838fd5",
+              "name": "message",
+              "value": "={{ $json.stdout }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        368,
+        592
+      ],
+      "id": "1787f396-a057-4bfb-8d8f-1db86034538f",
+      "name": "Return"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "c7c01ea7-c412-4b3f-9c5b-ff93281d4794",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -80,
+        592
+      ]
+    },
+    {
+      "parameters": {
+        "command": "python3 /notebooks/n8n_metrics_script.py"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        128,
+        592
+      ],
+      "id": "27a6d081-85da-4f74-ba79-842283621e23",
+      "name": "Execute Command"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Return",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7e3856ec-3e51-4045-b040-9c55957d9696",
+  "meta": {
+    "instanceId": "b8ca5751ea4dcb8e54f2e071b7ed2a3e7e6d269da3975aa53fd70e257d263cd7"
+  },
+  "id": "4PAuBjuRLi1NLaGg",
+  "tags": []
+}

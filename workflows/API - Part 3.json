@@ -1,0 +1,290 @@
+{
+  "name": "API - Part 3",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "api",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -256,
+        368
+      ],
+      "id": "1e044aa1-8eaf-4e39-bd10-62218353ab9d",
+      "name": "Webhook",
+      "webhookId": "004b6589-cf69-4d28-ab3b-507efffee0b4"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfrom datetime import datetime\n\nfor item in _input.all():\n\n  item.json.status = \"healthy\"\n  item.json.timestamp = datetime.now().isoformat()\n  item.json.message = \"API is running\"\n\nreturn _input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        352
+      ],
+      "id": "628dc3c5-2430-43c7-927b-ffe33650f38c",
+      "name": "Health Check"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "4PAuBjuRLi1NLaGg",
+          "mode": "list",
+          "cachedResultName": "Metrics Sub Workflow - Part 3"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        512
+      ],
+      "name": "Call Metrics",
+      "id": "1bb3cd95-fe89-4b18-8f74-699756502ade"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f3fb5681-2760-4d36-8b3e-14b91ff4cece",
+              "leftValue": "={{ $('Webhook').item.json.query.endpoint }}",
+              "rightValue": "health",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -64,
+        368
+      ],
+      "id": "6305c9bd-c341-439b-8b0d-ff0efe4d8a3c",
+      "name": "Check health"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json.message}}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        400,
+        352
+      ],
+      "id": "0316a66b-f2bd-4c89-99df-db68b4ffe6f7",
+      "name": "Respond to Webhook Metrics"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "51664a31-d718-4c8b-989c-d94b020866dc",
+              "leftValue": "={{ $('Webhook').item.json.query.agent }}",
+              "rightValue": "yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        592
+      ],
+      "id": "c70113c7-5ca2-46c1-9205-987d0d5adec2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "command": "=python3 /notebooks/n8n_agent_script.py '{{$json.message}}' '{{ $('Webhook').item.json.query.question }}'"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        640,
+        576
+      ],
+      "id": "610dd848-544f-47f6-b960-38e7eb4e1d6c",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json.stdout}}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        880,
+        576
+      ],
+      "id": "62ae6236-7305-404c-8601-44a2a30801d6",
+      "name": "Respond to Webhook Metrics1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Metrics": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check health": {
+      "main": [
+        [
+          {
+            "node": "Health Check",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook Metrics": {
+      "main": [
+        []
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook Metrics1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "54216236-ddb6-4243-9a69-3157c8cffcd3",
+  "meta": {
+    "instanceId": "b8ca5751ea4dcb8e54f2e071b7ed2a3e7e6d269da3975aa53fd70e257d263cd7"
+  },
+  "id": "EWvBgXAcjWeKbJER",
+  "tags": []
+}

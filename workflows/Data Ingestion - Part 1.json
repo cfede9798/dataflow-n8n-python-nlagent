@@ -1,0 +1,145 @@
+{
+  "name": "Data Ingestion - Part 1",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "684b5e9c-da63-456c-9334-633e3583d72b",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        960,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "python3 /notebooks/n8n_ingest_script.py"
+      },
+      "id": "a4cc7492-ac82-499b-ac74-6086c7d86fa9",
+      "name": "Execute Command",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        480
+      ],
+      "retryOnFail": false,
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "execution_status",
+              "value": "success"
+            },
+            {
+              "name": "message",
+              "value": "={{$json.stdout}}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{new Date().toISOString()}}"
+            },
+            {
+              "name": "workflow_name",
+              "value": "Data Ingestion - Part 1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8ddcee99-e065-4f2a-b205-4b9cffcfeedb",
+      "name": "Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "execution_status",
+              "value": "error"
+            },
+            {
+              "name": "error_message",
+              "value": "={{$json.error.message}}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{new Date().toISOString()}}"
+            },
+            {
+              "name": "workflow_name",
+              "value": "Data Ingestion - Part 1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ad8b7d03-0065-4d8c-8884-6cd38f3976fc",
+      "name": "error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        576
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "bb8d58f2-8d99-426f-a234-e9d8cf715505",
+  "meta": {
+    "instanceId": "b8ca5751ea4dcb8e54f2e071b7ed2a3e7e6d269da3975aa53fd70e257d263cd7"
+  },
+  "id": "1",
+  "tags": []
+}

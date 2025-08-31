@@ -1,0 +1,145 @@
+{
+  "name": "Metrics - Part 2",
+  "nodes": [
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "metrics",
+              "value": "={{$json.stdout}}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{new Date().toISOString()}}"
+            },
+            {
+              "name": "workflow_name",
+              "value": "Data Ingestion - Part 1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2a16c715-87ee-496b-924d-ec2feda2b594",
+      "name": "Success",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        160,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "python3 /notebooks/n8n_metrics_script.py"
+      },
+      "id": "7662c9de-725f-4d96-baeb-337e10e82a9f",
+      "name": "Execute Command1",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        144
+      ],
+      "retryOnFail": false,
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "execution_status",
+              "value": "error"
+            },
+            {
+              "name": "error_message",
+              "value": "={{$json.error.message}}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{new Date().toISOString()}}"
+            },
+            {
+              "name": "workflow_name",
+              "value": "Data Ingestion - Part 1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9bb0be2e-6ce6-4bac-8512-b3b33fd7fca0",
+      "name": "error1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        160,
+        240
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "0c1f2cf8-a7da-4607-ab46-6e68216cc96c",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        144
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Execute Command1": {
+      "main": [
+        [
+          {
+            "node": "Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Execute Command1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6d1f2e2e-d544-4dcf-8eb6-2ba85d8aea45",
+  "meta": {
+    "instanceId": "b8ca5751ea4dcb8e54f2e071b7ed2a3e7e6d269da3975aa53fd70e257d263cd7"
+  },
+  "id": "hd10jVW14oH26oB2",
+  "tags": []
+}
