@@ -1,4 +1,4 @@
-# Challenge-shadowlightstudio
+# Dataflow example developed with n8n, python and introducing nl agent (just little example)
 Dev test for AI + Data Engineer role - Carlos Federico Peña Peña
 
 # Project Setup and Execution Guide
